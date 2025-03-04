@@ -31,8 +31,7 @@ Côté back il faudrait utiliser plus de DTOs pour les échanges entre le front 
 4. Accéder à l'application sur `http://localhost:4200`
 
 ## Affichages
-![alt text](./salary-calculations.png)
-
+![écran](./salary-calculations.PNG)
 
 
 ## Points à Améliorer
