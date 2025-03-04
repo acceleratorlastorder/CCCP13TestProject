@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:17
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    networks:
+      - keycloak-network
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: password
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      # Activer le mode de développement pour faciliter le débogage
+      KC_HTTP_RELATIVE_PATH: /auth
+      # Configuration pour le mode hybride Azure AD / standalone
+      KC_FEATURES: token-exchange,admin-fine-grained-authz
+      # Option pour la sauvegarde périodique des utilisateurs et rôles
+      KC_SPI_EVENTS_LISTENER: jboss-logging
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - keycloak-network
+    command:
+      - start-dev
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  keycloak-network:
+    driver: bridge

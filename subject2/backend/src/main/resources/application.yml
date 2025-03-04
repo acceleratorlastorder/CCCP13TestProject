@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://192.168.1.16:5432/cccp13
+    username: CCCP13-user
+    password: 12345678
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  cache:
+    type: redis
+  data:
+    redis:
+      client-type: lettuce
+      host: 192.168.1.16
+      port: 6379
+
+server:
+  port: 8888
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    com.docker.salary: DEBUG

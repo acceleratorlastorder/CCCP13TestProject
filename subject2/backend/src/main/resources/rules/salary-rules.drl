@@ -1,0 +1,120 @@
+package rules;
+
+import com.cccp13.docker.salary.domain.model.WorkShift;
+import com.cccp13.docker.salary.domain.model.WorkSite;
+import com.cccp13.docker.salary.domain.model.CargoType;
+import com.cccp13.docker.salary.domain.model.Docker;
+import com.cccp13.docker.salary.domain.model.SalaryCalculation;
+import java.util.List;
+import com.cccp13.docker.salary.domain.model.SalaryRule;
+import java.math.BigDecimal;
+
+global List<SalaryRule> rules;
+
+// Règles pour les qualifications
+rule "Prime Contremaître"
+    when
+        $calc: SalaryCalculation()
+        $docker: Docker(qualification == "contremaître")
+    then
+        rules.add(new SalaryRule("Prime Contremaître", "qualification == 'contremaître'", 100, 1, null, null, true, SalaryRule.RuleType.QUALIFICATION));
+end
+
+rule "Prime Tuteur"
+    when
+        $calc: SalaryCalculation()
+        $docker: Docker(qualification == "tuteur")
+    then
+        rules.add(new SalaryRule("Prime Tuteur", "qualification == 'tuteur'", 80, 1, null, null, true, SalaryRule.RuleType.QUALIFICATION));
+end
+
+// Règles pour les shifts
+rule "Prime Nuit"
+    when
+        $calc: SalaryCalculation()
+        $shift: WorkShift(type == "nuit")
+    then
+        rules.add(new SalaryRule("Prime Nuit", "shift.type == 'nuit'", 150, 2, null, null, true, SalaryRule.RuleType.SHIFT));
+end
+
+rule "Prime Week-end"
+    when
+        $calc: SalaryCalculation()
+        $shift: WorkShift(weekend == true)
+    then
+        rules.add(new SalaryRule("Prime Week-end", "shift.weekend == true", 200, 2, null, null, true, SalaryRule.RuleType.SHIFT));
+end
+
+// Règles pour les sites de travail
+rule "Prime Navire"
+    when
+        $calc: SalaryCalculation()
+        $site: WorkSite(type == "navire")
+    then
+        rules.add(new SalaryRule("Prime Navire", "site.type == 'navire'", 120, 3, null, null, true, SalaryRule.RuleType.SITE));
+end
+
+// Rule for medium-risk sites (3+)
+rule "Prime Site Risqué"
+    when
+        $calc: SalaryCalculation()
+        $site: WorkSite(riskLevel >= 3 && riskLevel < 5)
+    then
+        rules.add(new SalaryRule("Prime Site Risqué", "site.riskLevel >= 3 && site.riskLevel < 5", 180, 3, null, null, true, SalaryRule.RuleType.SITE));
+end
+
+// Rule for very high-risk sites (5+)
+rule "Prime Site Très Risqué"
+    when
+        $calc: SalaryCalculation()
+        $site: WorkSite(riskLevel >= 5)
+    then
+        rules.add(new SalaryRule("Prime Site Très Risqué", "site.riskLevel >= 5", 300, 3, null, null, true, SalaryRule.RuleType.SITE));
+end
+
+// Règles pour les types de cargaison
+rule "Prime Cargo Vrac"
+    when
+        $calc: SalaryCalculation()
+        $cargo: CargoType(name == "vrac")
+    then
+        rules.add(new SalaryRule("Prime Cargo Vrac", "cargo.name == 'vrac'", 90, 4, null, null, true, SalaryRule.RuleType.CARGO));
+end
+
+rule "Prime Cargo Risqué"
+    when
+        $calc: SalaryCalculation()
+        $cargo: CargoType(riskLevel >= 3)
+    then
+        rules.add(new SalaryRule("Prime Cargo Risqué", "cargo.riskLevel >= 3", 150, 4, null, null, true, SalaryRule.RuleType.CARGO));
+end
+
+// Règles composites
+rule "Prime Expérience"
+    when
+        $calc: SalaryCalculation()
+        $docker: Docker(experienceYears >= 5)
+    then
+        rules.add(new SalaryRule("Prime Expérience", "docker.experienceYears >= 5", 50, 5, null, null, true, SalaryRule.RuleType.COMPOSITE));
+end
+
+rule "Prime Double Shift"
+    when
+        $calc: SalaryCalculation()
+        $shift: WorkShift(type == "nuit" && weekend == true)
+    then
+        rules.add(new SalaryRule("Prime Double Shift", "shift.type == 'nuit' && shift.weekend == true", 300, 6, null, null, true, SalaryRule.RuleType.COMPOSITE));
+end
+
+rule "Holiday Bonus"
+when
+    $calc : SalaryCalculation(
+        assignment.workShift != null,
+        assignment.workShift.holiday == true
+    )
+then
+    BigDecimal newBonus = $calc.getTotalBonus().add(new BigDecimal("100.00"));
+    $calc.setTotalBonus(newBonus);
+    update($calc);
+end
+
