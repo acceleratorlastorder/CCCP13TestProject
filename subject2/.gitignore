@@ -1,6 +1,6 @@
 .env
 .idea
 backend/target
-frontend/node_modules
-frontend/dist
-frontend/.angular
+salary-app/node_modules
+salary-app/dist
+salary-app/.angular
