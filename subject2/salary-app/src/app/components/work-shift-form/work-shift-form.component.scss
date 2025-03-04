@@ -1,0 +1,93 @@
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    color: #2c3e50;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 0.5rem;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: #3498db;
+      border-radius: 2px;
+    }
+  }
+
+  form {
+    .form-label {
+      color: #34495e;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      transition: all 0.3s ease;
+
+      &:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+      }
+    }
+
+    .form-check {
+      margin: 1rem 0;
+      
+      .form-check-input {
+        cursor: pointer;
+        width: 1.2rem;
+        height: 1.2rem;
+        margin-top: 0.2rem;
+      }
+
+      .form-check-label {
+        margin-left: 0.5rem;
+        color: #34495e;
+      }
+    }
+
+    button[type="submit"] {
+      background: #3498db;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      margin-top: 1.5rem;
+
+      &:hover {
+        background: #2980b9;
+        transform: translateY(-1px);
+      }
+
+      &:disabled {
+        background: #bdc3c7;
+        cursor: not-allowed;
+        transform: none;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+}

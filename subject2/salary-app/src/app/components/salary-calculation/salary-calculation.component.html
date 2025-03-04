@@ -1,0 +1,128 @@
+<div class="container">
+  <div class="header">
+    <div class="title-section">
+      <h2>Salary Calculations</h2>
+      <p class="subtitle">Manage and view all salary calculations</p>
+    </div>
+    <div class="actions">
+      <a routerLink="/dockers" class="btn-action btn-primary">
+        <i class="fas fa-user-plus"></i> Dockers
+      </a>
+      <a routerLink="/work-shifts" class="btn-action btn-success">
+        <i class="fas fa-clock"></i> Work Shifts
+      </a>
+      <button (click)="calculateAllSalaries()" class="btn-action btn-info">
+        <i class="fas fa-calculator"></i> Calculate All Salaries
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-cards">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Total Dockers</h3>
+        <p class="stat-value">{{statistics?.totalDockers || 0}}</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-money-bill-wave"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Average Salary</h3>
+        <p class="stat-value">{{statistics?.averageSalary}}</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Total Bonuses</h3>
+        <p class="stat-value">{{statistics?.totalBonuses}}</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="stat-content">
+        <h3>Calculations This Month</h3>
+        <p class="stat-value">{{statistics?.calculationsThisMonth || 0}}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div class="table-header">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text" 
+          placeholder="Search calculations..." 
+          [(ngModel)]="searchTerm"
+          (input)="filterCalculations()"
+        >
+      </div>
+      <div class="table-actions">
+        <button class="btn-icon" (click)="refreshData()">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="btn-icon" (click)="exportData()">
+          <i class="fas fa-download"></i>
+        </button>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Docker</th>
+          <th>Work Shift</th>
+          <th>Base Salary</th>
+          <th>Total Bonus</th>
+          <th>Total Salary</th>
+          <th>Calculation Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let calc of filteredCalculations">
+          <td>
+            <div class="docker-info">
+              <span class="docker-name">{{calc.docker?.qualification || 'Non assigné'}}</span>
+              <span class="docker-exp">{{calc.docker?.experienceYears}} years exp.</span>
+            </div>
+          </td>
+          <td>
+            <div class="shift-info">
+              <span class="shift-type">{{calc.workShift?.type || 'Non défini'}}</span>
+              <span class="shift-date">{{calc.workShift?.startTime | date:'short'}}</span>
+            </div>
+          </td>
+          <td>{{calc.baseSalary | currency:'EUR'}}</td>
+          <td>
+            <span class="bonus" [class.positive]="(calc.totalBonus || 0) > 0">
+              {{calc.totalBonus | currency:'EUR'}}
+            </span>
+          </td>
+          <td>
+            <span class="total-salary">{{calc.totalSalary | currency:'EUR'}}</span>
+          </td>
+          <td>{{calc.calculationDate | date:'medium'}}</td>
+          <td class="actions">
+            <button class="btn-icon" (click)="viewDetails(calc.id)">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn-icon" (click)="printCalculation(calc.id)">
+              <i class="fas fa-print"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="container mt-4">
+  <h2>Add New Work Shift</h2>
+  <form [formGroup]="workShiftForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="dockerId" class="form-label">Docker</label>
+      <select class="form-select" id="dockerId" formControlName="dockerId">
+        <option value="">Select a docker</option>
+        <option *ngFor="let docker of dockers" [value]="docker.id">
+          {{docker.qualification}} - {{docker.experienceYears}} years
+        </option>
+      </select>
+    </div>
+    
+    <div class="mb-3">
+      <label for="type" class="form-label">Shift Type</label>
+      <select class="form-select" id="type" formControlName="type">
+        <option value="jour">Day</option>
+        <option value="nuit">Night</option>
+      </select>
+    </div>
+    
+    <div class="mb-3">
+      <label for="startTime" class="form-label">Start Time</label>
+      <input type="datetime-local" class="form-control" id="startTime" formControlName="startTime">
+    </div>
+    
+    <div class="mb-3">
+      <label for="endTime" class="form-label">End Time</label>
+      <input type="datetime-local" class="form-control" id="endTime" formControlName="endTime">
+    </div>
+    
+    <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" id="weekend" formControlName="weekend">
+      <label class="form-check-label" for="weekend">Weekend</label>
+    </div>
+    
+    <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" id="holiday" formControlName="holiday">
+      <label class="form-check-label" for="holiday">Holiday</label>
+    </div>
+    
+    <button type="submit" class="btn btn-primary" [disabled]="!workShiftForm.valid">Submit</button>
+  </form>
+</div>

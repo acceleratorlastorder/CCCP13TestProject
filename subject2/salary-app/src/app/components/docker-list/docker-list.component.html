@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="header">
+    <h2>Dockers Management</h2>
+    <a routerLink="/dockers/new" class="btn-add">
+      <i class="fas fa-plus"></i> Add New Docker
+    </a>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Qualification</th>
+          <th>Experience</th>
+          <th>Base Salary</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let docker of dockers">
+          <td>{{docker.qualification}}</td>
+          <td>{{docker.experienceYears}} years</td>
+          <td>{{docker.baseSalary | currency:'EUR'}}</td>
+          <td>
+            <span class="status-badge" [class.active]="docker.active">
+              {{docker.active ? 'Active' : 'Inactive'}}
+            </span>
+          </td>
+          <td class="actions">
+            <a [routerLink]="['/dockers', docker.id, 'edit']" class="btn-edit">
+              <i class="fas fa-edit"></i>
+            </a>
+            <button (click)="deleteDocker(docker.id!)" class="btn-delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> 
